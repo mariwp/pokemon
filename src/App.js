@@ -1,23 +1,31 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import axios from 'axios';
 import './App.css';
 
 function App() {
+  // Inicialmente, pokemonList es un array vacío
+  const [pokemonList, setPokemonList] = useState([]);
+
+  const fetchPokemon = async () => {
+    try {
+      // Hacemos una solicitud GET a la API de Pokémon para obtener los primeros 807 Pokémon
+      const response = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=807');
+      // Actualizamos el estado pokemonList con los resultados de la solicitud
+      setPokemonList(response.data.results);
+    } catch (error) {
+      console.error('Error fetching the Pokémon data:', error);
+    }
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <button onClick={fetchPokemon}>Fetch Pokemon</button>
+      <ul>
+        {pokemonList.map((pokemon, index) => (
+          //Por cada Pokémon en pokemonList, renderizamos un elemento de lista (li) con su nombre
+          <li key={index}>{pokemon.name}</li>
+        ))}
+      </ul>
     </div>
   );
 }
